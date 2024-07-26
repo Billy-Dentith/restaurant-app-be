@@ -1,0 +1,18 @@
+{
+  "name": "restaurant-backend",
+  "version": "1.0.0",
+  "description": "restaurant-backend",
+  "main": "listen.js",
+  "scripts": {
+    "setup-dbs": "psql -f ./db/setup.sql",
+    "seed": "node ./db/seeds/run-seed.js",
+    "start": "node listen.js",
+    "seed-prod": "NODE_ENV=production npm run seed"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.12.0",
+    "pg-format": "^1.0.4"
+  }
+}
