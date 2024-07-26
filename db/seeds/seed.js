@@ -84,7 +84,7 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
 
     // Insert data into orders table
     const insertOrdersQueryStr = format(
-      'INSERT INTO categories (id, price, status, products, userEmail, stripeId) VALUES %L',
+      'INSERT INTO orders (id, price, status, products, userEmail, stripeId) VALUES %L',
       ordersData.map(({ id, price, status, products, userEmail, stripeId }) => [id, price, status, products, userEmail, stripeId])
     );
 
