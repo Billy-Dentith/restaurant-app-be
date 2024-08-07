@@ -17,3 +17,14 @@ describe('/api/healthcheck', () => {
         })
     })
 })
+
+describe('Invalid Endpoints', () => {
+    test('Should return a 404 error when passed an invalid endpoint', () => {
+        return request(app)
+        .get('/api/foodss')
+        .expect(404)
+        .then(({ body: { message }}) => {
+            expect(message).toBe('Endpoint not found')
+        })
+    })
+})

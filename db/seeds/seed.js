@@ -77,7 +77,7 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
     // Insert data into products table
     const insertProductsQueryStr = format(
       'INSERT INTO products (id, title, description, image, price, isFeatured, options, catSlug) VALUES %L',
-      productsData.map(({ id, title, desc, image, price, isFeatured, options, catSlug }) => [id, title, desc, image, price, isFeatured, options, catSlug])
+      productsData.map(({ id, title, desc, image, price, isFeatured, options, catSlug }) => [id, title, desc, image, price, isFeatured, JSON.stringify(options), catSlug])
     );
 
     await db.query(insertProductsQueryStr);
