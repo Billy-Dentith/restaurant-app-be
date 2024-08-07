@@ -16,7 +16,7 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
         name VARCHAR NOT NULL,
         email VARCHAR UNIQUE NOT NULL,
         image VARCHAR,
-        isAdmin BOOLEAN DEFAULT false
+        is_admin BOOLEAN DEFAULT false
       );
     `);
 
@@ -40,9 +40,9 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
         description TEXT,
         image VARCHAR,
         price INTEGER NOT NULL,
-        isFeatured BOOLEAN DEFAULT false,
+        is_featured BOOLEAN DEFAULT false,
         options JSON,
-        catSlug VARCHAR NOT NULL REFERENCES categories(slug)
+        cat_slug VARCHAR NOT NULL REFERENCES categories(slug)
       );
     `);
 
@@ -53,14 +53,14 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
         price INTEGER NOT NULL,
         status VARCHAR(50) NOT NULL,
         products JSON NOT NULL,
-        userEmail VARCHAR NOT NULL REFERENCES users(email),
-        stripeId VARCHAR
+        user_email VARCHAR NOT NULL REFERENCES users(email),
+        stripe_id VARCHAR
       );
     `);
 
     // Insert data into users table
     const insertUsersQueryStr = format(
-      'INSERT INTO users (id, name, email, image, isAdmin) VALUES %L',
+      'INSERT INTO users (id, name, email, image, is_admin) VALUES %L',
       usersData.map(({ id, name, email, image, isAdmin }) => [id, name, email, image, isAdmin])
     );
 
@@ -76,7 +76,7 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
 
     // Insert data into products table
     const insertProductsQueryStr = format(
-      'INSERT INTO products (id, title, description, image, price, isFeatured, options, catSlug) VALUES %L',
+      'INSERT INTO products (id, title, description, image, price, is_featured, options, cat_slug) VALUES %L',
       productsData.map(({ id, title, desc, image, price, isFeatured, options, catSlug }) => [id, title, desc, image, price, isFeatured, JSON.stringify(options), catSlug])
     );
 
@@ -84,7 +84,7 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
 
     // Insert data into orders table
     const insertOrdersQueryStr = format(
-      'INSERT INTO orders (id, price, status, products, userEmail, stripeId) VALUES %L',
+      'INSERT INTO orders (id, price, status, products, user_email, stripe_id) VALUES %L',
       ordersData.map(({ id, price, status, products, userEmail, stripeId }) => [id, price, status, products, userEmail, stripeId])
     );
 
