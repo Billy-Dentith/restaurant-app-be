@@ -62,11 +62,22 @@ describe('/api/products', () => {
         .get('/api/products')
         .expect(200)
         .then(({ body: { products }}) => {
-            expect(products.length).toBe(6);
+            expect(products.length).toBe(12);
             products.forEach((product) => {
                 expect(typeof product.title).toBe('string');
                 expect(typeof product.price).toBe('number');
                 expect(typeof product.options).toBe('object');
+            })
+        })
+    })
+    test('GET 200: Should return an array of all the products of the given category', () => {
+        return request(app)
+        .get('/api/products?category=burgers')
+        .expect(200)
+        .then(({ body: { products }}) => {
+            expect(products.length).toBe(3)
+            products.forEach((product) => {
+                expect(product.cat_slug).toBe('burgers');
             })
         })
     })
