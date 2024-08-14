@@ -12,7 +12,7 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
     // Create users table
     await db.query(`
       CREATE TABLE users (
-        id VARCHAR PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         name VARCHAR NOT NULL,
         email VARCHAR UNIQUE NOT NULL,
         image VARCHAR,
@@ -23,7 +23,7 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
     // Create categories table
     await db.query(`
       CREATE TABLE categories (
-        id VARCHAR PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         title VARCHAR NOT NULL,
         description TEXT,
         image VARCHAR,
@@ -35,7 +35,7 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
     // Create products table
     await db.query(`
       CREATE TABLE products (
-        id VARCHAR PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         title VARCHAR NOT NULL,
         description TEXT,
         image VARCHAR,
@@ -49,7 +49,7 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
     // Create orders table
     await db.query(`
       CREATE TABLE orders (
-        id VARCHAR PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         price INTEGER NOT NULL,
         status VARCHAR(50) NOT NULL,
         products JSON NOT NULL,

@@ -82,6 +82,26 @@ describe('/api/products', () => {
         })
     })
 })
+describe('/api/product/:id', () => { 
+    test('GET 200: Should return a single product object of the provided id', () => {
+        return request(app)
+        .get('/api/products/1')
+        .expect(200)
+        .then(({ body: { product }}) => {
+            expect(product.id).toBe(1)
+            expect(product.title).toBe('Sicilian')
+        })
+    })
+    test('GET 200: Should return a single product object of the provided id', () => {
+        return request(app)
+        .get('/api/products/7')
+        .expect(200)
+        .then(({ body: { product }}) => {
+            expect(product.id).toBe(7)
+            expect(product.title).toBe('Classic Cheeseburger')
+        })
+    })
+ })
 
 describe('/api/users', () => {
     test('GET 200: Should return an array of all the users', () => {

@@ -17,3 +17,10 @@ exports.selectProducts = (category) => {
         return rows; 
     })
 }
+
+exports.selectSingleProduct = (id) => {
+    return db.query(`SELECT * FROM products WHERE id=$1;`, [id])
+    .then(({ rows }) => {       
+        return rows[0];
+    })
+}
