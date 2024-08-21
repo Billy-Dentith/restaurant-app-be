@@ -145,3 +145,18 @@ describe('/api/orders', () => {
         })
     })
 })
+
+describe('/api/orders?userEmail=john@example.com', () => {
+    test('GET 200: Should return an array of all the orders for a particular user', () => {
+        return request(app)
+        .get('/api/orders?userEmail=john@example.com')
+        .expect(200)
+        .then(({ body: { orders }}) => {
+            expect(orders.length).toBe(2);
+            orders.forEach((order) => {
+                expect(typeof order.price).toBe('number');
+                expect(typeof order.products).toBe('object')
+            })
+        })
+    })
+})
