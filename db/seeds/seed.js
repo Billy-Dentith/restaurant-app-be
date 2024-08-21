@@ -100,12 +100,12 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
     `);
 
     // Insert data into users table
-    // const insertUsersQueryStr = format(
-    //   'INSERT INTO users (id, name, email, image, is_admin) VALUES %L',
-    //   usersData.map(({ id, name, email, image, isAdmin }) => [id, name, email, image, isAdmin])
-    // );
+    const insertUsersQueryStr = format(
+      'INSERT INTO users (id, name, email, image, is_admin) VALUES %L',
+      usersData.map(({ id, name, email, image, isAdmin }) => [id, name, email, image, isAdmin])
+    );
 
-    // await db.query(insertUsersQueryStr);
+    await db.query(insertUsersQueryStr);
   
     // Insert data into categories table
     const insertCategoriesQueryStr = format(
@@ -124,12 +124,12 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
     await db.query(insertProductsQueryStr);
 
     // Insert data into orders table
-    // const insertOrdersQueryStr = format(
-    //   'INSERT INTO orders (id, price, status, products, user_email, stripe_id) VALUES %L',
-    //   ordersData.map(({ id, price, status, products, userEmail, stripeId }) => [id, price, status, products, userEmail, stripeId])
-    // );
+    const insertOrdersQueryStr = format(
+      'INSERT INTO orders (id, price, status, products, user_email, stripe_id) VALUES %L',
+      ordersData.map(({ id, price, status, products, userEmail, stripeId }) => [id, price, status, products, userEmail, stripeId])
+    );
 
-    // await db.query(insertOrdersQueryStr);
+    await db.query(insertOrdersQueryStr);
   
     console.log("Seeding completed successfully.");
   } catch (error) {

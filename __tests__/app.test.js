@@ -118,6 +118,19 @@ describe('/api/users', () => {
     })
 })
 
+describe('/api/users/id', () => {
+    test('GET 200: Should return an array of the user with the given id', () => {
+        return request(app)
+        .get('/api/users/1')
+        .expect(200)
+        .then(({ body: { user }}) => {
+            expect(user.name).toBe('John Doe');
+            expect(user.email).toBe('john@example.com');
+            expect(user.is_admin).toBe(false);
+        })
+    })
+})
+
 describe('/api/orders', () => {
     test('GET 200: Should return an array of all the orders', () => {
         return request(app)

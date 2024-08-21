@@ -6,3 +6,10 @@ exports.selectUsers = () => {
         return rows;
     })
 }
+
+exports.selectUserById = (id) => {
+    return db.query(`SELECT * FROM users WHERE id=$1`, [id])
+    .then(({ rows }) => {
+        return rows[0]; 
+    })
+}
