@@ -160,3 +160,19 @@ describe('/api/orders?userEmail=john@example.com', () => {
         })
     })
 })
+
+describe('/api/orders/:order_id', () => {
+    test('PATCH 202: Should update the order of the given id and return the updated order', () => {
+        const updOrder = {
+            status: 'pending'
+        }
+
+        return request(app)
+        .patch('/api/orders/2')
+        .send(updOrder)
+        .expect(202)
+        .then(({ body: { order }}) => {
+            expect(order.status).toBe('pending')
+        })
+    })
+})

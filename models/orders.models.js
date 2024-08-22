@@ -16,3 +16,15 @@ exports.selectOrders = (userEmail) => {
         return rows;
     })
 }
+
+exports.updateOrderById = (order_id, { status }) => {
+    return db.query(`
+        UPDATE orders
+        SET status=$1
+        WHERE id=$2
+        RETURNING*;`,
+        [status, order_id])
+    .then(({ rows }) => {
+        return rows[0];
+    })
+}
