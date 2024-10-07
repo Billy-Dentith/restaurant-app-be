@@ -24,3 +24,12 @@ exports.selectSingleProduct = (id) => {
         return rows[0];
     })
 }
+
+exports.removeProductById = (id) => {
+    return db.query(`DELETE FROM products WHERE id=$1 RETURNING*;`, [id])
+    .then(({ rows }) => {
+        if (rows.length === 0) {
+            return Promise.reject({ status: 400, message: "Product does not exist"})
+        }
+    })
+}
