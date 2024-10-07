@@ -103,6 +103,20 @@ describe('/api/product/:id', () => {
     })
  })
 
+describe('/api/products/:id', () => {
+    test('DELETE 204: Should delete a single product object of the provided id', () => {
+        return request(app)
+        .delete('/api/products/2')
+        .expect(204)
+        .then(() => {
+            return db.query(`SELECT * FROM products;`)
+            .then(({ rows }) => {
+                expect(rows.length).toBe(11);
+            })
+        })
+    })
+})
+
 describe('/api/users', () => {
     test('GET 200: Should return an array of all the users', () => {
         return request(app)
