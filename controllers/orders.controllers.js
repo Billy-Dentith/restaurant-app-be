@@ -1,5 +1,4 @@
-const products = require("../db/data/test-data/products");
-const { selectOrders, updateOrderById, insertOrder } = require("../models/orders.models")
+const { selectOrders, updateOrderById, insertOrder, selectOrderById } = require("../models/orders.models")
 
 exports.getAllOrders = (req, res, next) => {
     const { userEmail } = req.query; 
@@ -34,4 +33,12 @@ exports.postOrder = (req, res, next) => {
             res.status(201).send({ order });
         })
     }
+}
+
+exports.getOrderById = (req, res, next) => {
+    const { order_id } = req.params;
+
+    selectOrderById(order_id).then((order) => {
+        res.status(200).send({ order })
+    })
 }

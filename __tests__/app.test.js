@@ -251,4 +251,15 @@ describe('/api/orders/:order_id', () => {
             expect(order.stripe_id).toBe('stripe_test')
         })
     })
+    test('GET 200: Should return an order object for the given order id', () => { 
+        return request(app)
+        .get('/api/orders/1')
+        .expect(200)
+        .then(({ body: { order }}) => {
+            expect(order.id).toBe(1);
+            expect(order.price).toBe(1198);
+            expect(order.status).toBe("completed");
+            expect(order.user_email).toBe("john@example.com");
+        })
+     })
 })
