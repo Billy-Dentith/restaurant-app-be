@@ -17,21 +17,38 @@ exports.selectOrders = (userEmail) => {
     })
 }
 
-exports.updateOrderById = (order_id, { status }) => {
-    return db.query(`
+exports.updateOrderById = (order_id, { status, stripe_id }) => {
+    let queryStr; 
+    const queryVals = []; 
+
+    if (status) {
+        queryStr = `
         UPDATE orders
         SET status=$1
         WHERE id=$2
-        RETURNING*;`,
-        [status, order_id])
+        RETURNING*;`
+
+        queryVals.push(status); 
+        queryVals.push(order_id); 
+        
+    } else if (stripe_id) {
+        queryStr = `
+        UPDATE orders
+        SET stripe_id=$1
+        WHERE id=$2
+        RETURNING*;`
+
+        queryVals.push(stripe_id)
+        queryVals.push(order_id); 
+    }    
+
+    return db.query(queryStr, queryVals)
     .then(({ rows }) => {
         return rows[0];
     })
 }
 
-exports.insertOrder = ({ price, status, products, userEmail }) => {
-    console.log("order items in insertOrder" , price, status, products, userEmail);
-    
+exports.insertOrder = ({ price, status, products, userEmail }) => {    
     const queryVals = [price, status, JSON.stringify(products), userEmail]
     const queryStr = `
         INSERT INTO orders

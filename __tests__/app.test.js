@@ -201,8 +201,6 @@ describe('/api/orders', () => {
         .send(newOrder)
         .expect(201)
         .then(({ body: { order }}) => {
-            console.log("order in test", order);
-            
             expect(order.price).toBe(9070);
             expect(order.products.length).toBe(2);
             expect(order.status).toBe("Not Paid!");
@@ -238,6 +236,19 @@ describe('/api/orders/:order_id', () => {
         .expect(202)
         .then(({ body: { order }}) => {
             expect(order.status).toBe('pending')
+        })
+    })
+    test('PATCH 202: Should update the order of the given id and return the updated order', () => {
+        const updOrder = {
+            stripe_id: 'stripe_test'
+        }
+
+        return request(app)
+        .patch('/api/orders/4')
+        .send(updOrder)
+        .expect(202)
+        .then(({ body: { order }}) => {
+            expect(order.stripe_id).toBe('stripe_test')
         })
     })
 })
