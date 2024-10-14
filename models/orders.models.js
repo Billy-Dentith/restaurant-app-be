@@ -62,3 +62,12 @@ exports.insertOrder = ({ price, status, products, userEmail }) => {
         return rows[0];
     })
 }
+
+exports.selectOrderById = (order_id) => {
+    let queryString = `SELECT * FROM orders WHERE id=$1;`;
+
+    return db.query(queryString, [order_id])
+    .then(({ rows }) => {
+        return rows[0];
+    })
+}
