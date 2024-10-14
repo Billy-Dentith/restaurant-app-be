@@ -28,3 +28,20 @@ exports.updateOrderById = (order_id, { status }) => {
         return rows[0];
     })
 }
+
+exports.insertOrder = ({ price, status, products, userEmail }) => {
+    console.log("order items in insertOrder" , price, status, products, userEmail);
+    
+    const queryVals = [price, status, JSON.stringify(products), userEmail]
+    const queryStr = `
+        INSERT INTO orders
+            (price, status, products, user_email) 
+        VALUES 
+            ($1, $2, $3, $4)
+        RETURNING*;`
+
+    return db.query(queryStr, queryVals)
+    .then(({ rows }) => {       
+        return rows[0];
+    })
+}
