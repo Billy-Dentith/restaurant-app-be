@@ -5,8 +5,21 @@ const testData = require('../db/data/test-data');
 const request = require('supertest');
 const availableEndpoints = require('../endpoints.json')
 
-afterAll(() => db.end());
-beforeAll(() => seed(testData))
+let client;
+
+beforeAll(async () => await seed(testData))
+
+beforeEach(async () => {
+    client = await db.connect();
+    await client.query('BEGIN'); 
+  });
+  
+  afterEach(async () => {
+    await client.query('ROLLBACK');
+    client.release(); 
+  });
+
+afterAll(async () => await db.end());
 
 describe('/api/healthcheck', () => {
     test('GET 200: Should respond with a 200 ok status code', () => {
@@ -158,6 +171,44 @@ describe('/api/orders', () => {
             })
         })
     })
+})
+
+describe('/api/orders', () => {
+    test('POST 201: Should create a new order in the orders table and return the added order', () => { 
+        const newOrder = {
+            price: 9070,
+            status: "Not Paid!",
+            products: [
+                {
+                    "id": 3,
+                    "title": "Bella Napoli",
+                    "price": 6580,
+                    "optionTitle": "Large",
+                    "quantity": 2
+                },
+                {
+                    "id": 1,
+                    "title": "Sicilian",
+                    "price": 2490,
+                    "optionTitle": "Small",
+                    "quantity": 1
+                }
+            ],
+            userEmail: "jane@example.com",
+        }
+        return request(app)
+        .post('/api/orders')
+        .send(newOrder)
+        .expect(201)
+        .then(({ body: { order }}) => {
+            console.log("order in test", order);
+            
+            expect(order.price).toBe(9070);
+            expect(order.products.length).toBe(2);
+            expect(order.status).toBe("Not Paid!");
+            expect(order.user_email).toBe("jane@example.com");
+        })
+     })
 })
 
 describe('/api/orders?userEmail=john@example.com', () => {

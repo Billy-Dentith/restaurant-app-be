@@ -101,32 +101,32 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
 
     // Insert data into users table
     const insertUsersQueryStr = format(
-      'INSERT INTO users (id, name, email, image, is_admin) VALUES %L',
-      usersData.map(({ id, name, email, image, isAdmin }) => [id, name, email, image, isAdmin])
+      'INSERT INTO users (name, email, image, is_admin) VALUES %L',
+      usersData.map(({ name, email, image, isAdmin }) => [name, email, image, isAdmin])
     );
 
     await db.query(insertUsersQueryStr);
   
     // Insert data into categories table
     const insertCategoriesQueryStr = format(
-      'INSERT INTO categories (id, title, description, image, slug, color) VALUES %L',
-      categoriesData.map(({ id, title, desc, image, slug, color }) => [id, title, desc, image, slug, color])
+      'INSERT INTO categories (title, description, image, slug, color) VALUES %L',
+      categoriesData.map(({ title, desc, image, slug, color }) => [title, desc, image, slug, color])
     );
     
     await db.query(insertCategoriesQueryStr);
 
     // Insert data into products table
     const insertProductsQueryStr = format(
-      'INSERT INTO products (id, title, description, image, price, is_featured, options, cat_slug) VALUES %L',
-      productsData.map(({ id, title, desc, image, price, isFeatured, options, catSlug }) => [id, title, desc, image, price, isFeatured, JSON.stringify(options), catSlug])
+      'INSERT INTO products (title, description, image, price, is_featured, options, cat_slug) VALUES %L',
+      productsData.map(({ title, desc, image, price, isFeatured, options, catSlug }) => [title, desc, image, price, isFeatured, JSON.stringify(options), catSlug])
     );
 
     await db.query(insertProductsQueryStr);
 
     // Insert data into orders table
     const insertOrdersQueryStr = format(
-      'INSERT INTO orders (id, price, status, products, user_email, stripe_id) VALUES %L',
-      ordersData.map(({ id, price, status, products, userEmail, stripeId }) => [id, price, status, products, userEmail, stripeId])
+      'INSERT INTO orders (price, status, products, user_email, stripe_id) VALUES %L',
+      ordersData.map(({ price, status, products, userEmail, stripeId }) => [price, status, products, userEmail, stripeId])
     );
 
     await db.query(insertOrdersQueryStr);
