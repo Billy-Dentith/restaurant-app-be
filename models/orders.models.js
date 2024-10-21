@@ -1,3 +1,4 @@
+const { disable } = require('../app');
 const db = require('../db/connection');
 
 exports.selectOrders = (userEmail) => {   
@@ -68,6 +69,19 @@ exports.selectOrderById = (order_id) => {
 
     return db.query(queryString, [order_id])
     .then(({ rows }) => {
+        return rows[0];
+    })
+}
+
+exports.getOrderByPaymentIntent = (paymentIntentId) => {
+    const queryStr = `SELECT * FROM orders WHERE stripe_id=$1;`; 
+    const queryVals = [paymentIntentId]     
+ 
+    return db.query(queryStr, queryVals)
+    .then(({ rows }) => {
+        if (rows.length === 0) {
+            throw new Error("No order found for the provided paymentIntentId");
+        }
         return rows[0];
     })
 }
