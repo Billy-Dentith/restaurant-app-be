@@ -131,7 +131,6 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
 
     await db.query(insertOrdersQueryStr);
   
-    console.log("Seeding completed successfully.");
   } catch (error) {
     console.error("Error during seeding:", error);
   }

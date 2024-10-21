@@ -1,4 +1,4 @@
-const { selectOrders, updateOrderById, insertOrder, selectOrderById } = require("../models/orders.models")
+const { selectOrders, updateOrderById, insertOrder, selectOrderById, getOrderByPaymentIntent } = require("../models/orders.models")
 
 exports.getAllOrders = (req, res, next) => {
     const { userEmail } = req.query; 
@@ -41,4 +41,25 @@ exports.getOrderById = (req, res, next) => {
     selectOrderById(order_id).then((order) => {
         res.status(200).send({ order })
     })
+}
+
+exports.updateOrder = (req, res, next) => {
+    const { intentId } = req.params;
+    const updStatus = req.body; 
+    
+    getOrderByPaymentIntent(intentId)
+        .then((order) => {
+            if (!order) {
+                return res.status(404).send({ message: "Order not found!"});
+            }
+
+            return updateOrderById(order.id, updStatus);
+        })
+        .then((updatedOrder) => {
+            return res.status(202).send({ updatedOrder })
+        })
+        .catch((err) => {
+            console.error(err);
+            return res.status(500).send({ message: "An error occurred while updating the order"})
+        })
 }

@@ -5,21 +5,8 @@ const testData = require('../db/data/test-data');
 const request = require('supertest');
 const availableEndpoints = require('../endpoints.json')
 
-let client;
-
-beforeAll(async () => await seed(testData))
-
-beforeEach(async () => {
-    client = await db.connect();
-    await client.query('BEGIN'); 
-  });
-  
-  afterEach(async () => {
-    await client.query('ROLLBACK');
-    client.release(); 
-  });
-
-afterAll(async () => await db.end());
+beforeEach(() => seed(testData))
+afterAll(() => db.end());
 
 describe('/api/healthcheck', () => {
     test('GET 200: Should respond with a 200 ok status code', () => {
@@ -262,4 +249,20 @@ describe('/api/orders/:order_id', () => {
             expect(order.user_email).toBe("john@example.com");
         })
      })
+})
+describe('/api/confirm/:intentId', () => {
+    test('PATCH 202: Should update the order stripeId and return the updated order', () => { 
+        const updOrder = {
+            status: 'Pending'
+        }
+
+        return request(app)
+        .patch('/api/confirm/stripe_2')
+        .send(updOrder)
+        .expect(202)
+        .then(({ body: { updatedOrder }}) => {            
+            expect(updatedOrder.stripe_id).toBe("stripe_2")
+            expect(updatedOrder.status).toBe("Pending");
+        })
+    })
 })
