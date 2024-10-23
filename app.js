@@ -1,6 +1,6 @@
 const express = require('express');
 const apiRouter = require('./routes/api-router')
-const { handleInvalidEndpoint } = require('./errors');
+const { handleInvalidEndpoint, handleCustomErrors, handleServerErrors, handlePsqlErrors } = require('./errors');
 const categoriesRouter = require('./routes/categories-router');
 const productsRouter = require('./routes/products-router');
 const usersRouter = require('./routes/users-router');
@@ -18,5 +18,9 @@ apiRouter.use('/users', usersRouter);
 apiRouter.use('/orders', ordersRouter);
 
 app.all('*', handleInvalidEndpoint); 
+
+app.use(handleCustomErrors);
+app.use(handlePsqlErrors);
+app.use(handleServerErrors);
 
 module.exports = app;

@@ -5,16 +5,29 @@ exports.getAllOrders = (req, res, next) => {
 
     selectOrders(userEmail).then((orders) => {
         res.status(200).send({ orders });
-    })
+    }).catch(next)
 }
 
 exports.patchOrderById = (req, res, next) => {
     const { order_id } = req.params;
     const updOrder = req.body;    
+    const acceptedUpdates = ['status', 'stripe_id'];
+    let validOrder = true; 
 
-    updateOrderById(order_id, updOrder).then((order) => {
-        res.status(202).send({ order }); 
+    Object.keys(updOrder).forEach((key) => {
+        if (!acceptedUpdates.includes(key)) {
+            validOrder = false;
+        }
     })
+
+    if (validOrder) {
+        updateOrderById(order_id, updOrder).then((order) => {
+            res.status(202).send({ order }); 
+        }).catch(next)
+    } else {
+        res.status(400).send({ message: "Bad Request"})
+    }
+
 }
 
 exports.postOrder = (req, res, next) => {
@@ -31,7 +44,9 @@ exports.postOrder = (req, res, next) => {
     if (validOrder) {
         insertOrder(newOrder).then((order) => {
             res.status(201).send({ order });
-        })
+        }).catch(next)
+    } else {
+        res.status(400).send({ message: "Invalid Order"})
     }
 }
 
@@ -40,7 +55,7 @@ exports.getOrderById = (req, res, next) => {
 
     selectOrderById(order_id).then((order) => {
         res.status(200).send({ order })
-    })
+    }).catch(next)
 }
 
 exports.updateOrder = (req, res, next) => {

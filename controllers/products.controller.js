@@ -5,7 +5,7 @@ exports.getAllProducts = (req, res, next) => {
     
     selectProducts(category).then((products) => {
         res.status(200).send({ products })
-    })
+    }).catch(next)
 }
 
 exports.getProductById = (req, res, next) => {    
@@ -13,7 +13,7 @@ exports.getProductById = (req, res, next) => {
 
     selectSingleProduct(id).then((product) => {
         res.status(200).send({ product })
-    })
+    }).catch(next)
 }
 
 exports.deleteProductById = (req, res, next) => {
@@ -21,13 +21,25 @@ exports.deleteProductById = (req, res, next) => {
 
     removeProductById(id).then(() => {
         res.status(204).send();
-    })
+    }).catch(next)
 }
 
 exports.postProduct = (req, res, next) => {
     const newProduct = req.body;
-    
-    addProduct(newProduct).then((product) => {
-        res.status(201).send({ product })
+    const acceptedProperties = ['title', 'description', 'image', 'price', 'options', 'catSlug']
+    let validProduct = true;
+
+    Object.keys(newProduct).forEach((key) => {
+        if (!acceptedProperties.includes(key)) {
+            validProduct = false; 
+        }
     })
+
+    if (validProduct) {
+        addProduct(newProduct).then((product) => {
+            res.status(201).send({ product })
+        }).catch(next)
+    } else {
+        res.status(400).send({ message: "Invalid Product"})
+    }
 }

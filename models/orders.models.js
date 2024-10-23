@@ -69,6 +69,9 @@ exports.selectOrderById = (order_id) => {
 
     return db.query(queryString, [order_id])
     .then(({ rows }) => {
+        if (rows.length === 0) {
+            return Promise.reject({ status: 404, message: 'Order not found'})
+        }
         return rows[0];
     })
 }

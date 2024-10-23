@@ -1,26 +1,40 @@
 const db = require('../db/connection');
+const { selectCategories } = require('./categories.models');
 
 exports.selectProducts = (category) => {    
-    const validTopics = ['pizzas', 'pastas', 'burgers']
-    let queryString = `SELECT * FROM products `;
+    return selectCategories().then((categoriesArray) => {
+        const validCategories = categoriesArray.map((categories) => {
+            return categories.slug;
+        })
+        
+        let queryString = `SELECT * FROM products `;
+        const queryVals = [];
 
-    if (category) {
-        if (validTopics.includes(category)) {
-            queryString += `WHERE cat_slug='${category}' `
+        if (category) {
+            if (validCategories.includes(category)) {
+                queryString += `WHERE cat_slug=$1`
+                queryVals.push(category);
+            } else {
+                return Promise.reject({ status: 400, message: "Invalid Query" })
+            }
         } 
-        // Add else block with error handling
-    }
-    queryString += `;`    
 
-    return db.query(queryString)
-    .then(({ rows }) => {
-        return rows; 
+        queryString += `;`;
+
+        return db.query(queryString, queryVals)
+        .then(({ rows }) => {
+            return rows; 
+        })
     })
+
 }
 
 exports.selectSingleProduct = (id) => {
     return db.query(`SELECT * FROM products WHERE id=$1;`, [id])
-    .then(({ rows }) => {       
+    .then(({ rows }) => {  
+        if (rows.length === 0) {
+            return Promise.reject({ status: 404, message: "Product does not exist"})
+        }     
         return rows[0];
     })
 }
@@ -29,7 +43,7 @@ exports.removeProductById = (id) => {
     return db.query(`DELETE FROM products WHERE id=$1 RETURNING*;`, [id])
     .then(({ rows }) => {
         if (rows.length === 0) {
-            return Promise.reject({ status: 400, message: "Product does not exist"})
+            return Promise.reject({ status: 404, message: "Product does not exist"})
         }
     })
 }
