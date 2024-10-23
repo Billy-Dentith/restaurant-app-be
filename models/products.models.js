@@ -33,3 +33,18 @@ exports.removeProductById = (id) => {
         }
     })
 }
+
+exports.addProduct = ({ title, description, image, price, options, catSlug }) => {
+    const queryVals = [title, description, image, price, JSON.stringify(options), catSlug]; 
+    const queryStr = `
+        INSERT INTO products 
+            (title, description, image, price, options, cat_slug)
+        VALUES
+            ($1, $2, $3, $4, $5, $6)
+        RETURNING*;`
+    
+    return db.query(queryStr, queryVals)
+    .then(({ rows }) => {
+        return rows[0];
+    })
+}
