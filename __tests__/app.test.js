@@ -82,7 +82,7 @@ describe('/api/products', () => {
         })
     })
 })
-describe('/api/product/:id', () => { 
+describe('/api/products/:id', () => { 
     test('GET 200: Should return a single product object of the provided id', () => {
         return request(app)
         .get('/api/products/1')
@@ -265,4 +265,35 @@ describe('/api/confirm/:intentId', () => {
             expect(updatedOrder.status).toBe("Pending");
         })
     })
+})
+describe('/api/products', () => {
+    test('POST 201: Should add a new product and return the added product', () => { 
+        const newProduct = {
+            title: "New Product",
+            description: "Test Description",
+            image: "https://plus.unsplash.com/premium_photo-1668771085743-1d2d19818140?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
+            price: 10,
+            options: [{
+                title: "Large", 
+                additionalPrice: 10
+            }],
+            catSlug: 'pizzas',
+        }
+
+        return request(app)
+        .post('/api/products')
+        .send(newProduct)
+        .expect(201)
+        .then(({ body: { product }}) => {
+            expect(product.title).toBe("New Product");
+            expect(product.description).toBe("Test Description");
+            expect(product.image).toBe("https://plus.unsplash.com/premium_photo-1668771085743-1d2d19818140?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+            expect(product.price).toBe(10);
+            expect(product.options).toEqual([{
+                title: "Large", 
+                additionalPrice: 10
+            }]);
+            expect(product.cat_slug).toBe("pizzas");
+        })
+     })
 })

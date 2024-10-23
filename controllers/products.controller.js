@@ -1,4 +1,4 @@
-const { selectProducts, selectSingleProduct, removeProductById } = require('../models/products.models');
+const { selectProducts, selectSingleProduct, removeProductById, addProduct } = require('../models/products.models');
 
 exports.getAllProducts = (req, res, next) => {
     const { category } = req.query;
@@ -21,5 +21,13 @@ exports.deleteProductById = (req, res, next) => {
 
     removeProductById(id).then(() => {
         res.status(204).send();
+    })
+}
+
+exports.postProduct = (req, res, next) => {
+    const newProduct = req.body;
+    
+    addProduct(newProduct).then((product) => {
+        res.status(201).send({ product })
     })
 }
