@@ -1,5 +1,225 @@
 {
-    "GET /api": {
-        "description": "Serves up a JSON representation of all the available endpoints of the API"
+  "GET /api": {
+    "description": "Serves up a JSON representation of all the available endpoints of the API"
+  },
+  "GET /api/categories": {
+    "description": "Serves an array of all categories",
+    "queries": [],
+    "exampleResponse": {
+      "categories": [
+        {
+          "id": 1,
+          "title": "Italian Pastas",
+          "description": "Savour the taste of perfection with our exquisite Italian handmade pasta menu.",
+          "image": "/temporary/m1.png",
+          "slug": "pastas",
+          "color": "#FF5733"
+        }
+      ]
     }
+  },
+  "GET /api/products": {
+    "description": "Serves an array of all products",
+    "queries": ["category"],
+    "exampleResponse": {
+      "products": [
+        {
+          "id": 1,
+          "title": "Sicilian",
+          "description": "Ignite your taste buds with a fiery combination of spicy pepperoni, jalapeños, crushed red pepper flakes, and melted mozzarella cheese, delivering a kick with every bite.",
+          "image": "/temporary/p1.png",
+          "price": 2490,
+          "is_featured": false,
+          "options": [
+            {
+              "title": "Small",
+              "additionalPrice": 0
+            },
+            {
+              "title": "Medium",
+              "additionalPrice": 400
+            },
+            {
+              "title": "Large",
+              "additionalPrice": 600
+            }
+          ],
+          "cat_slug": "pizzas"
+        }
+      ]
+    }
+  },
+  "POST /api/products": {
+    "description": "Posts a product to the products table and returns posted product to client",
+    "queries": [],
+    "exampleRequest": {
+      "title": "New Product",
+      "description": "Test Description",
+      "image": "https://plus.unsplash.com/premium_photo-1668771085743-1d2d19818140?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "price": 1499,
+      "options": [
+        {
+          "title": "Large",
+          "additionalPrice": 1000
+        }
+      ],
+      "catSlug": "pizzas"
+    },
+    "exampleResponse": {
+      "product": {
+        "id": 15,
+        "title": "New Product",
+        "description": "Test Description",
+        "image": "https://plus.unsplash.com/premium_photo-1668771085743-1d2d19818140?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "price": 1499,
+        "is_featured": false,
+        "options": [
+          {
+            "title": "Large",
+            "additionalPrice": 1000
+          }
+        ],
+        "cat_slug": "pizzas"
+      }
+    }
+  },
+  "GET /api/products/:id": {
+    "description": "Serves a single product object of the given id",
+    "queries": [],
+    "exampleResponse": {
+      "product": [
+        {
+          "id": 1,
+          "title": "Sicilian",
+          "description": "Ignite your taste buds with a fiery combination of spicy pepperoni, jalapeños, crushed red pepper flakes, and melted mozzarella cheese, delivering a kick with every bite.",
+          "image": "/temporary/p1.png",
+          "price": 2490,
+          "is_featured": false,
+          "options": [
+            {
+              "title": "Small",
+              "additionalPrice": 0
+            },
+            {
+              "title": "Medium",
+              "additionalPrice": 400
+            },
+            {
+              "title": "Large",
+              "additionalPrice": 600
+            }
+          ],
+          "cat_slug": "pizzas"
+        }
+      ]
+    }
+  },
+  "DELETE /api/product/:id": {
+    "description": "Deletes a product based on given product ID",
+    "queries": []
+  },
+  "GET /api/orders": {
+    "description": "Serves an array of all orders",
+    "queries": ["userEmail"],
+    "exampleResponse": {
+      "orders": [
+        {
+          "id": 1,
+          "price": 1198,
+          "status": "completed",
+          "products": {
+            "quantity": 2,
+            "productId": "1"
+          },
+          "user_email": "john@example.com",
+          "stripe_id": "stripe_1"
+        }
+      ]
+    }
+  },
+  "POST /api/orders": {
+    "description": "Posts an order to the orders table and returns posted order to client",
+    "queries": [],
+    "exampleRequest": {
+      "price": 9070,
+      "status": "Not Paid!",
+      "products": [
+        {
+          "id": 3,
+          "title": "Bella Napoli",
+          "price": 6580,
+          "optionTitle": "Large",
+          "quantity": 2
+        },
+        {
+          "id": 1,
+          "title": "Sicilian",
+          "price": 2490,
+          "optionTitle": "Small",
+          "quantity": 1
+        }
+      ],
+      "userEmail": "jane@example.com"
+    },
+    "exampleResponse": {
+      "id": 45,
+      "price": 9070,
+      "status": "Not Paid!",
+      "products": [
+        {
+          "id": 3,
+          "title": "Bella Napoli",
+          "price": 6580,
+          "optionTitle": "Large",
+          "quantity": 2
+        },
+        {
+          "id": 1,
+          "title": "Sicilian",
+          "price": 2490,
+          "optionTitle": "Small",
+          "quantity": 1
+        }
+      ],
+      "user_email": "jane@example.com",
+      "stripe_id": null
+    }
+  },
+  "GET /api/orders/id": {
+    "description": "Serves an order object for the given order ID",
+    "queries": [],
+    "exampleResponse": {
+      "order": {
+        "id": 1,
+        "price": 1198,
+        "status": "completed",
+        "products": {
+          "quantity": 2,
+          "productId": "1"
+        },
+        "user_email": "john@example.com",
+        "stripe_id": "stripe_1"
+      }
+    }
+  },
+  "PATCH /api/orders/id": {
+    "description": "Patches an order for the given order ID and returns the patched order",
+    "queries": [],
+    "exampleRequest": {
+      "stripe_id": "stripe_test"
+    },
+    "exampleResponse": {
+      "order": {
+        "id": 1,
+        "price": 1198,
+        "status": "completed",
+        "products": {
+          "quantity": 2,
+          "productId": "1"
+        },
+        "user_email": "john@example.com",
+        "stripe_id": "stripe_test"
+      }
+    }
+  }
 }

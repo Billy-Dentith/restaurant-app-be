@@ -1,4 +1,3 @@
-const { disable } = require('../app');
 const db = require('../db/connection');
 
 exports.selectOrders = (userEmail) => {   
