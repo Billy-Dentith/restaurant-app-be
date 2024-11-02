@@ -95,7 +95,9 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
         status VARCHAR(50) NOT NULL,
         products JSON NOT NULL,
         user_email VARCHAR NOT NULL REFERENCES users(email),
-        stripe_id VARCHAR
+        stripe_id VARCHAR,
+        created_at TIMESTAMP DEFAULT NOW(),
+        is_deleted BOOLEAN DEFAULT FALSE
       );
     `);
 
