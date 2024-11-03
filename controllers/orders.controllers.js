@@ -1,4 +1,4 @@
-const { selectOrders, updateOrderById, insertOrder, selectOrderById, getOrderByPaymentIntent } = require("../models/orders.models")
+const { selectOrders, updateOrderById, insertOrder, selectOrderById, getOrderByPaymentIntent, removeOrder } = require("../models/orders.models")
 
 exports.getAllOrders = (req, res, next) => {
     const { userEmail } = req.query; 
@@ -77,4 +77,12 @@ exports.updateOrder = (req, res, next) => {
             console.error(err);
             return res.status(500).send({ message: "An error occurred while updating the order"})
         })
+}
+
+exports.deleteOrder = (req, res, next) => {
+    const { order_id } = req.params;   
+
+    removeOrder(order_id).then((removedOrder) => {
+        res.status(200).send({ removedOrder })
+    }).catch(next)
 }

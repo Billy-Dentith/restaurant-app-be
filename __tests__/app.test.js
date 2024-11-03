@@ -262,6 +262,59 @@ describe('/api/orders', () => {
             })
         })
     })
+    test('GET 200: Should return an array of all the orders where is_deleted=false', () => {
+        return request(app)
+        .delete('/api/orders/1')
+        .expect(200)
+        .then(() => {
+            return request(app)
+            .get('/api/orders')
+            .expect(200)
+            .then(({ body: { orders }}) => {   
+                orders.map((order) => {
+                    expect(order.is_deleted).toBe(false);
+                })
+            })
+        })
+    })
+    test('GET 200: Should return an array of all the orders sorted by created_at in descending order', () => {
+        const newOrder = {
+            price: 9070,
+            status: "Not Paid!",
+            products: [
+                {
+                    "id": 3,
+                    "title": "Bella Napoli",
+                    "price": 6580,
+                    "optionTitle": "Large",
+                    "quantity": 2
+                },
+                {
+                    "id": 1,
+                    "title": "Sicilian",
+                    "price": 2490,
+                    "optionTitle": "Small",
+                    "quantity": 1
+                }
+            ],
+            userEmail: "jane@example.com",
+        }
+
+        return request(app)
+        .post('/api/orders')
+        .send(newOrder)
+        .expect(201)
+        .then(() => {
+            return request(app)
+            .get('/api/orders')
+            .expect(200)
+            .then(({ body: { orders }}) => {          
+                expect(orders).toBeSortedBy('created_at', {
+                    descending: true
+                });
+            })
+        })
+    })
     test('POST 201: Should create a new order in the orders table and return the added order', () => { 
         const newOrder = {
             price: 9070,
@@ -410,6 +463,23 @@ describe('/api/orders/:order_id', () => {
         .expect(400)
         .then(({ body: { message }}) => {
             expect(message).toBe("Bad Request")
+        })
+    })
+    test('DELETE 204: Should amend the order of the given ID to have is_deleted=true', () => {
+        return request(app)
+        .delete('/api/orders/1')
+        .expect(200)
+        .then(({ body : { removedOrder } }) => {
+            expect(removedOrder.id).toBe(1);
+            expect(removedOrder.is_deleted).toBe(true); 
+        })
+    })
+    test('DELETE 204: Should return an appropriate status and error message if the order does not exist', () => {
+        return request(app)
+        .delete('/api/orders/9999')
+        .expect(404)
+        .then(({ body : { message } }) => {
+            expect(message).toBe("Order not found")   
         })
     })
 })
