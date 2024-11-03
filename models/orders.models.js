@@ -1,13 +1,15 @@
 const db = require('../db/connection');
 
 exports.selectOrders = (userEmail) => {   
-    let queryString = `SELECT * FROM orders `;
+    let queryString = `SELECT * FROM orders WHERE is_deleted=false `;
     const queryVals = [];
 
     if (userEmail) {        
-        queryString += `WHERE user_email=$1 `
+        queryString += `AND user_email=$1 `
         queryVals.push(userEmail)
     }
+
+    queryString += `ORDER BY created_at DESC`
 
     queryString += `;`;
 
@@ -83,6 +85,20 @@ exports.getOrderByPaymentIntent = (paymentIntentId) => {
     .then(({ rows }) => {
         if (rows.length === 0) {
             throw new Error("No order found for the provided paymentIntentId");
+        }
+        return rows[0];
+    })
+}
+
+exports.removeOrder = (id) => {
+    return db.query(`
+        UPDATE orders
+        SET is_deleted=true
+        WHERE id=$1
+        RETURNING*;`, [id]
+    ).then(({ rows }) => {
+        if (rows.length === 0) {
+            return Promise.reject({ status: 404, message: "Order not found"})
         }
         return rows[0];
     })
