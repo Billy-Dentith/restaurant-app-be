@@ -62,3 +62,33 @@ exports.addProduct = ({ title, description, image, price, options, catSlug }) =>
         return rows[0];
     })
 }
+
+exports.editProduct = (id, updates) => {    
+    const acceptedProperties = ['title', 'description', 'image', 'price', 'is_featured', 'options'];
+
+    const validUpdates = Object.keys(updates).filter((key) => acceptedProperties.includes(key));
+
+    if (validUpdates.length === 0) {
+        return Promise.reject({ status: 400, message: "No valid fields provided for update" });
+    }
+
+    const params = validUpdates.map((key, index) => `${key}=$${index + 1}`).join(", ");
+    const queryVals = validUpdates.map((key) => 
+        key === "options" ? JSON.stringify(updates[key]) : updates[key]
+    );
+    queryVals.push(id); 
+
+    const queryStr = `
+        UPDATE products
+        SET ${params}
+        WHERE id=$${queryVals.length}
+        RETURNING*;`
+
+    return db.query(queryStr, queryVals)
+    .then(({ rows }) => {
+        if (rows.length === 0) {
+            return Promise.reject({ status: 404, message: "Product does not exist"})
+        }
+        return rows[0];
+    })
+}
