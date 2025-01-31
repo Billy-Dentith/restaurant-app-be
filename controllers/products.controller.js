@@ -1,9 +1,9 @@
 const { selectProducts, selectSingleProduct, removeProductById, addProduct, editProduct } = require('../models/products.models');
 
 exports.getAllProducts = (req, res, next) => {
-    const { category } = req.query;
+    const { category, isFeatured } = req.query;
     
-    selectProducts(category).then((products) => {
+    selectProducts(category, isFeatured).then((products) => {
         res.status(200).send({ products })
     }).catch(next)
 }
