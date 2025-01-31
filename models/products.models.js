@@ -1,7 +1,7 @@
 const db = require('../db/connection');
 const { selectCategories } = require('./categories.models');
 
-exports.selectProducts = (category) => {    
+exports.selectProducts = (category, isFeatured) => {    
     return selectCategories().then((categoriesArray) => {
         const validCategories = categoriesArray.map((categories) => {
             return categories.slug;
@@ -18,6 +18,9 @@ exports.selectProducts = (category) => {
                 return Promise.reject({ status: 400, message: "Invalid Query" })
             }
         } 
+        if (isFeatured) {
+            queryString += `WHERE is_featured=true`
+        }
 
         queryString += `;`;
 
@@ -26,7 +29,6 @@ exports.selectProducts = (category) => {
             return rows; 
         })
     })
-
 }
 
 exports.selectSingleProduct = (id) => {
