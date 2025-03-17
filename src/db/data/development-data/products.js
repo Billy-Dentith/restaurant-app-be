@@ -1,5 +1,4 @@
 module.exports = [
-  // Existing pizza items...
   {
     id: '1',
     title: 'Sicilian',
@@ -138,8 +137,6 @@ module.exports = [
     ],
     catSlug: 'pizzas',
   },
-
-  // New burger items...
   {
     id: '7',
     title: 'Classic Cheeseburger',
@@ -197,8 +194,6 @@ module.exports = [
     ],
     catSlug: 'burgers',
   },
-
-  // New pasta items...
   {
     id: '10',
     title: 'Creamy Alfredo Pasta',
