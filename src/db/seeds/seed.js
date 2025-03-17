@@ -69,7 +69,7 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
         description TEXT,
         image VARCHAR,
         slug VARCHAR UNIQUE NOT NULL,
-        color VARCHAR
+        colour VARCHAR
       );
     `);
 
@@ -111,8 +111,8 @@ async function seed({ categoriesData, productsData, usersData, ordersData }) {
   
     // Insert data into categories table
     const insertCategoriesQueryStr = format(
-      'INSERT INTO categories (title, description, image, slug, color) VALUES %L',
-      categoriesData.map(({ title, desc, image, slug, color }) => [title, desc, image, slug, color])
+      'INSERT INTO categories (title, description, image, slug, colour) VALUES %L',
+      categoriesData.map(({ title, desc, image, slug, colour }) => [title, desc, image, slug, colour])
     );
     
     await db.query(insertCategoriesQueryStr);
